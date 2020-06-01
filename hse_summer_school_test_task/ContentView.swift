@@ -7,19 +7,18 @@
 //
 
 import SwiftUI
-
+import Alamofire
 struct ContentView: View {
     
     @State var valueToConvert: String = ""
     @State var showChooseView = false
-    @State var to: String = ""
-    @State var from: String = ""
+    @State var currencyConvertTo: String = ""
+    @State var currencyConvertFrom: String = ""
     @State var mode: String = ""
-    
     var body: some View {
         NavigationView{
             if showChooseView == true{
-                chooseView(to: $to, from: $from, showThisView: $showChooseView, mode: $mode)
+                chooseView(to: $currencyConvertTo, from: $currencyConvertFrom, showThisView: $showChooseView, mode: $mode)
             }
             VStack
             {
@@ -28,40 +27,39 @@ struct ContentView: View {
                 HStack{
                 Text("From")
                     Button(action: {
-                        self.mode = "to"
+                        self.mode = "from"
                         self.showChooseView = true
                     }, label: {Text("Choose")})
-                Text("\(to)")
+                Text("\(currencyConvertFrom)")
                 }
                 
                 HStack{
                 Text("To")
                     Button(action: {
-                        self.mode = "from"
+                        self.mode = "to"
                         self.showChooseView = true
                     }, label: {Text("Choose")})
-                Text("\(from)")
+                Text("\(currencyConvertTo)")
                 }
                 Button(action: {
+                
                     }, label: {Text("Convert!")}).padding()
             .navigationBarTitle("Converter")
             Spacer()
             }
+        }.onAppear {
+            getRates(base: "", mode: "show")
         }
     }
 }
 
-
-
 struct chooseView: View {
-    
     @Binding var to: String
     @Binding var from: String
-    @State var currency = ["$", "Rub"]
-    @State var selectedCurrency = 0
+    @State private var selectedCurrency = 0
     @Binding var showThisView: Bool
     @Binding var mode: String
-    
+    var arr = getRates(base: "", mode: "show")
     var body: some View{
         ZStack{
         Color(.lightGray).opacity(0.2).edgesIgnoringSafeArea(.all)
@@ -72,21 +70,24 @@ struct chooseView: View {
         .padding()
             VStack{
                 Picker("", selection: $selectedCurrency){
-                    ForEach(0 ..< currency.count)
+                    ForEach(0 ..< arr.count)
                     {
-                        Text(self.currency[$0])
+                        Text("\(self.arr[$0].key)")
                     }
                 }.labelsHidden()
                 Button(action: {
                     if self.mode == "to"{
-                        self.to = self.currency[self.selectedCurrency]}
-                    else{
-                        self.from = self.currency[self.selectedCurrency]}
+                        self.to = self.arr[self.selectedCurrency].key
+                    }
+                    else
+                    {
+                        self.from = self.arr[self.selectedCurrency].key
+                    }
                     self.showThisView = false
                 }, label: {Text("Done")})
             }
         }
-    }
+        }
     }
 }
 
@@ -94,5 +95,14 @@ struct chooseView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+
+extension Dictionary{
+    subscript(i: Int) -> (key: Key, value: Value){
+        get{
+            return self[index(startIndex, offsetBy: i)]
+        }
     }
 }

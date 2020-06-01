@@ -1,0 +1,6 @@
+framework module Pods_hse_summer_school_test_task {
+  umbrella header "Pods-hse_summer_school_test_task-umbrella.h"
+
+  export *
+  module * { export * }
+}
