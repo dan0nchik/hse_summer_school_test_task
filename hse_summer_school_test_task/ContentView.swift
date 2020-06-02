@@ -15,7 +15,7 @@ struct ContentView: View {
     @State private var currencyConvertTo: String = ""
     @State private var currencyConvertFrom: String = ""
     @State private var mode: String = ""
-    @State private var result: String = ""
+    @State private var result: Double = 0
     var body: some View {
         NavigationView{
             if showChooseView == true{
@@ -46,15 +46,18 @@ struct ContentView: View {
                     let json = getRates(base: self.currencyConvertFrom)
                     let rates = json["rates"] as! [String:Any]
                     let value = rates["\(self.currencyConvertTo)"]
-                    self.result = String(describing: value) as String
+                    self.result = Double(truncating: value as! NSNumber)*Double(self.valueToConvert)!
+                    
+                    
                     }, label: {Text("Convert!")}).padding()
-                    Text("\(result)")
+                Text("\(result)")
             .navigationBarTitle("Converter")
             Spacer()
             }
         }.onAppear {
             var i = 0
-            while i<100{
+            while i<110
+            {
                 getRates(base: self.currencyConvertFrom)
                 i+=1
             }
@@ -98,7 +101,7 @@ struct chooseView: View {
         }
         }.onAppear {
             var i = 0
-            while i<100{
+            while i<50{
                 getRates(base: "")
                 i+=1
             }
