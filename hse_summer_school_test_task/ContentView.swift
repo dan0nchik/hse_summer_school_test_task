@@ -16,6 +16,10 @@ struct ContentView: View {
     @State private var currencyConvertFrom: String = ""
     @State private var mode: String = ""
     @State private var result: Double = 0
+    @State private var firstCurr: Bool = true
+    @State private var secondCur: Bool = true
+    @State private var valueEntered: Bool = true
+    
     var body: some View {
         NavigationView{
             if showChooseView == true{
@@ -23,40 +27,89 @@ struct ContentView: View {
             }
             VStack
             {
-                TextField("Value to convert", text: $valueToConvert).padding([.top, .horizontal], 40)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                TextField("Value to convert", text: $valueToConvert).padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle()).cornerRadius(40)
+                if !valueEntered
+                {
+                    Text("Please enter the value!").foregroundColor(.red)
+                }
                 HStack{
                 Text("From")
+                    .font(.title)
+                    .fontWeight(.medium).bold()
+                    .padding()
+                    .opacity(0.5)
+                
                     Button(action: {
                         self.mode = "from"
                         self.showChooseView = true
                     }, label: {Text("Choose")})
-                Text("\(currencyConvertFrom)")
+                    Text("\(currencyConvertFrom)").bold()
                 }
-                
+                if !firstCurr{
+                    Text("Please choose the first currency!").foregroundColor(.red)
+                }
                 HStack{
                 Text("To")
+                    .font(.title)
+                    .fontWeight(.medium).bold()
+                    .padding()
+                    .opacity(0.5)
                     Button(action: {
                         self.mode = "to"
                         self.showChooseView = true
                     }, label: {Text("Choose")})
-                Text("\(currencyConvertTo)")
+                    Text("\(currencyConvertTo)").bold()
+                }
+                if !secondCur{
+                    Text("Please choose the second currency!").foregroundColor(.red)
                 }
                 Button(action: {
+                    
+                    if self.valueToConvert == ""{
+                        self.valueEntered = false
+                    }
+                    else if self.currencyConvertFrom == ""{
+                        self.firstCurr = false
+                    }
+                    else if self.currencyConvertTo == ""{
+                        self.secondCur = false
+                    }
+                    else
+                    {
                     let json = getRates(base: self.currencyConvertFrom)
                     let rates = json["rates"] as! [String:Any]
                     let value = rates["\(self.currencyConvertTo)"]
                     self.result = Double(truncating: value as! NSNumber)*Double(self.valueToConvert)!
                     
-                    
-                    }, label: {Text("Convert!")}).padding()
-                Text("\(result)")
-            .navigationBarTitle("Converter")
-            Spacer()
+                    }
+                    }, label:
+                    {
+                        Text("Convert!")
+                            .bold()
+                            .font(.title)
+                            .padding()
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .cornerRadius(40)
+                            
+                    }).padding()
+                
+                Image("convert")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
+                    .padding()
+                
+                Text("\(String(format: "%.2f", result))")
+                    .font(.title).bold()
+                    .navigationBarTitle("Converter")
+                Spacer()
             }
         }.onAppear {
             var i = 0
-            while i<110
+            while i<10
             {
                 getRates(base: self.currencyConvertFrom)
                 i+=1
