@@ -10,28 +10,18 @@ import Foundation
 import Alamofire
 import Combine
 
-    public var final =  [String:Any]()
-    func getRates(base:String, mode:String) -> [String:Any]
+    public var Json =  [String:Any]()
+    func getRates(base:String) -> [String:Any]
     {
-        
-        var url:String = ""
-        if mode == "show"
+        var url = URL(string: "https://api.exchangeratesapi.io/latest")!
+        if base != ""
         {
-            url = "https://api.exchangeratesapi.io/latest"}
-        else{
-            url = "https://api.exchangeratesapi.io/latest?base=\(base)"
+            url = URL(string: "https://api.exchangeratesapi.io/latest?base=\(base)")!
         }
-        AF.request(url).responseJSON  {
-            (response) in
-            switch response.result{
-            case let .success(value):
-                let json = value as? [String:Any]
-                let rates = json?["rates"] as! [String : Any]
-                final = rates
-                case let .failure(error):
-                print(error.localizedDescription)
-                
-            }
-        }
-        return final
+        URLSession.shared.dataTask(with: url){
+            (data, response, error) in
+            guard let data = data else { return }
+            Json = try! JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+        }.resume()
+        return Json
     }

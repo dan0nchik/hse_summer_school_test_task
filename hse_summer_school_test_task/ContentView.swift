@@ -10,11 +10,12 @@ import SwiftUI
 import Alamofire
 struct ContentView: View {
     
-    @State var valueToConvert: String = ""
-    @State var showChooseView = false
-    @State var currencyConvertTo: String = ""
-    @State var currencyConvertFrom: String = ""
-    @State var mode: String = ""
+    @State private var valueToConvert: String = ""
+    @State private var showChooseView = false
+    @State private var currencyConvertTo: String = ""
+    @State private var currencyConvertFrom: String = ""
+    @State private var mode: String = ""
+    @State private var result: String = ""
     var body: some View {
         NavigationView{
             if showChooseView == true{
@@ -42,13 +43,21 @@ struct ContentView: View {
                 Text("\(currencyConvertTo)")
                 }
                 Button(action: {
-                
+                    let json = getRates(base: self.currencyConvertFrom)
+                    let rates = json["rates"] as! [String:Any]
+                    let value = rates["\(self.currencyConvertTo)"]
+                    self.result = String(describing: value) as String
                     }, label: {Text("Convert!")}).padding()
+                    Text("\(result)")
             .navigationBarTitle("Converter")
             Spacer()
             }
         }.onAppear {
-            getRates(base: "", mode: "show")
+            var i = 0
+            while i<100{
+                getRates(base: self.currencyConvertFrom)
+                i+=1
+            }
         }
     }
 }
@@ -59,7 +68,7 @@ struct chooseView: View {
     @State private var selectedCurrency = 0
     @Binding var showThisView: Bool
     @Binding var mode: String
-    var arr = getRates(base: "", mode: "show")
+    var arr = getRates(base: "")["rates"] as! [String:Any]
     var body: some View{
         ZStack{
         Color(.lightGray).opacity(0.2).edgesIgnoringSafeArea(.all)
@@ -87,6 +96,12 @@ struct chooseView: View {
                 }, label: {Text("Done")})
             }
         }
+        }.onAppear {
+            var i = 0
+            while i<100{
+                getRates(base: "")
+                i+=1
+            }
         }
     }
 }
