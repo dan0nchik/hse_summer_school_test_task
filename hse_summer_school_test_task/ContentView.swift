@@ -28,12 +28,11 @@ struct ContentView: View {
     @State private var valueEntered: Bool = true
     @State private var arr = [String:Double]()
     var body: some View {
-        NavigationView{
-            if showChooseView == true{
-                chooseView(to: $currencyConvertTo, from: $currencyConvertFrom, showThisView: $showChooseView, mode: $mode)
-            }
+        ZStack{
+            
             VStack
             {
+                Text("CONVERTER").font(.largeTitle).bold()
                 TextField("Value to convert", text: $valueToConvert).padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle()).cornerRadius(40)
                 if !valueEntered
@@ -106,9 +105,17 @@ struct ContentView: View {
                 
                 Text("\(String(format: "%.2f", result))")
                     .font(.title).bold()
-                    .navigationBarTitle("Converter")
-                Spacer()
+                
             }.onAppear(perform: callAPI)
+            if showChooseView == true{
+                withAnimation{
+                    GeometryReader{
+                        _ in
+                        chooseView(to: self.$currencyConvertTo, from: self.$currencyConvertFrom, showThisView: self.$showChooseView, mode: self.$mode)
+                    }
+                }
+                
+            }
         }.onAppear(perform: callAPI)
 }
     func callAPI(){
@@ -141,13 +148,10 @@ struct chooseView: View {
     @State private var arr = ["BGN", "MYR", "TRY", "GBP", "ILS", "ISK", "RUB", "AUD", "CZK", "PHP", "NZD", "BRL", "CHF", "RON", "INR", "CNY", "DKK", "SGD", "HKD", "HRK", "CAD", "NOK", "PLN", "HUF", "SEK", "JPY", "KRW", "IDR", "ZAR", "THB", "USD", "MXN", "EUR"]
     var body: some View{
         ZStack{
-        RoundedRectangle(cornerRadius: 20)
-        .frame(width: 300, height: 300)
-            .foregroundColor(.white)
-        .padding()
+            Color.black.opacity(0.65).edgesIgnoringSafeArea(.all)
             VStack{
                 Picker("", selection: $selectedCurrency){
-                    ForEach(0 ..< self.arr.count)
+                    ForEach(0 ..< self.arr.sorted().count)
                     {
                         Text("\(self.arr[$0])").foregroundColor(.black)
                     }
@@ -161,9 +165,9 @@ struct chooseView: View {
                         self.from = self.arr[self.selectedCurrency]
                     }
                     self.showThisView = false
-                }, label: {Text("Done")})
-            }.background(Color.white)
-        }
+                    }, label: {Text("Done")}).padding()
+                }.background(Color.white).cornerRadius(20)
+    }
     }
 }
 
