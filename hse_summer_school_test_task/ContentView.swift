@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-
+// We'll decode JSON from API into this
 struct Exchange:Codable {
     var rates: [String:Double]
     var date: String
@@ -29,12 +29,13 @@ struct ContentView: View {
     @State private var arr = [String:Double]()
     var body: some View {
         ZStack{
-            
             VStack
             {
-                Text("CONVERTER").font(.largeTitle).bold()
+                Text("CONVERTER").font(.system(size: 40, weight: .thin, design: .rounded)).bold()
                 TextField("Value to convert", text: $valueToConvert).padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle()).cornerRadius(40)
+                    .keyboardType(.decimalPad)
+                    
                 if !valueEntered
                 {
                     Text("Please enter the value!").foregroundColor(.red)
@@ -71,6 +72,7 @@ struct ContentView: View {
                     Text("Please choose the second currency!").foregroundColor(.red)
                 }
                 Button(action: {
+                    UIApplication.shared.endEditing()
                     if self.valueToConvert == ""{
                         self.valueEntered = false
                     }
@@ -88,12 +90,12 @@ struct ContentView: View {
                     {
                         Text("Convert!")
                             .bold()
-                            .font(.title)
+                            .font(.body)
                             .padding()
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
-                            .background(Color.blue)
-                            .cornerRadius(40)
+                            .background(Color.orange)
+                            .cornerRadius(20)
                             
                     }).padding()
                 
@@ -128,7 +130,6 @@ struct ContentView: View {
             if let data = data {
                 if let decodedResponse = try? JSONDecoder().decode(Exchange.self, from: data) {
                     DispatchQueue.main.async {
-                        //print(decodedResponse)
                         self.arr = decodedResponse.rates
                         self.arr = decodedResponse.rates
                     }
@@ -175,5 +176,12 @@ struct chooseView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+//dismissing keyboard
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
