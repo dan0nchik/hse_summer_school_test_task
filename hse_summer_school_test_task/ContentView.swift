@@ -7,7 +7,14 @@
 //
 
 import SwiftUI
-import Alamofire
+
+
+struct Exchange:Codable {
+    var rates: [String:Double]
+    var date: String
+    var base: String
+}
+
 struct ContentView: View {
     
     @State private var valueToConvert: String = ""
@@ -19,7 +26,7 @@ struct ContentView: View {
     @State private var firstCurr: Bool = true
     @State private var secondCur: Bool = true
     @State private var valueEntered: Bool = true
-    
+    @State private var arr = [String:Double]()
     var body: some View {
         NavigationView{
             if showChooseView == true{
@@ -65,7 +72,6 @@ struct ContentView: View {
                     Text("Please choose the second currency!").foregroundColor(.red)
                 }
                 Button(action: {
-                    
                     if self.valueToConvert == ""{
                         self.valueEntered = false
                     }
@@ -77,11 +83,7 @@ struct ContentView: View {
                     }
                     else
                     {
-                    let json = getRates(base: self.currencyConvertFrom)
-                    let rates = json["rates"] as! [String:Any]
-                    let value = rates["\(self.currencyConvertTo)"]
-                    self.result = Double(truncating: value as! NSNumber)*Double(self.valueToConvert)!
-                    
+                        self.result = self.arr["\(self.currencyConvertTo)"]! * Double(self.valueToConvert)!
                     }
                     }, label:
                     {
@@ -106,28 +108,38 @@ struct ContentView: View {
                     .font(.title).bold()
                     .navigationBarTitle("Converter")
                 Spacer()
-            }
-        }.onAppear {
-            var i = 0
-            while i<10
-            {
-                getRates(base: self.currencyConvertFrom)
-                i+=1
-            }
+            }.onAppear(perform: callAPI)
+        }.onAppear(perform: callAPI)
+}
+    func callAPI(){
+        guard let url = URL(string: "https://api.exchangeratesapi.io/latest?base=\(self.currencyConvertFrom)") else {
+            print("Invalid URL")
+            return
         }
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                if let decodedResponse = try? JSONDecoder().decode(Exchange.self, from: data) {
+                    DispatchQueue.main.async {
+                        //print(decodedResponse)
+                        self.arr = decodedResponse.rates
+                        self.arr = decodedResponse.rates
+                    }
+                    return
+                }
+            }
+            print("Fetch failed: \(error?.localizedDescription ?? "Unknown error")")
+        }.resume()
     }
 }
-
 struct chooseView: View {
     @Binding var to: String
     @Binding var from: String
     @State private var selectedCurrency = 0
     @Binding var showThisView: Bool
     @Binding var mode: String
-    var arr = getRates(base: "")["rates"] as! [String:Any]
+    @State private var arr = ["BGN", "MYR", "TRY", "GBP", "ILS", "ISK", "RUB", "AUD", "CZK", "PHP", "NZD", "BRL", "CHF", "RON", "INR", "CNY", "DKK", "SGD", "HKD", "HRK", "CAD", "NOK", "PLN", "HUF", "SEK", "JPY", "KRW", "IDR", "ZAR", "THB", "USD", "MXN", "EUR"]
     var body: some View{
-        ZStack{
-        Color(.lightGray).opacity(0.2).edgesIgnoringSafeArea(.all)
         ZStack{
         RoundedRectangle(cornerRadius: 20)
         .frame(width: 300, height: 300)
@@ -135,29 +147,22 @@ struct chooseView: View {
         .padding()
             VStack{
                 Picker("", selection: $selectedCurrency){
-                    ForEach(0 ..< arr.count)
+                    ForEach(0 ..< self.arr.count)
                     {
-                        Text("\(self.arr[$0].key)")
+                        Text("\(self.arr[$0])").foregroundColor(.black)
                     }
                 }.labelsHidden()
                 Button(action: {
                     if self.mode == "to"{
-                        self.to = self.arr[self.selectedCurrency].key
+                        self.to = self.arr[self.selectedCurrency]
                     }
                     else
                     {
-                        self.from = self.arr[self.selectedCurrency].key
+                        self.from = self.arr[self.selectedCurrency]
                     }
                     self.showThisView = false
                 }, label: {Text("Done")})
-            }
-        }
-        }.onAppear {
-            var i = 0
-            while i<50{
-                getRates(base: "")
-                i+=1
-            }
+            }.background(Color.white)
         }
     }
 }
@@ -166,14 +171,5 @@ struct chooseView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-
-extension Dictionary{
-    subscript(i: Int) -> (key: Key, value: Value){
-        get{
-            return self[index(startIndex, offsetBy: i)]
-        }
     }
 }

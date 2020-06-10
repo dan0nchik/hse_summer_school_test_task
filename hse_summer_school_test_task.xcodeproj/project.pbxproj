@@ -14,7 +14,6 @@
 		6F555D0024825D28008D02B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F555CFF24825D28008D02B0 /* Assets.xcassets */; };
 		6F555D0324825D28008D02B0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F555D0224825D28008D02B0 /* Preview Assets.xcassets */; };
 		6F555D0624825D28008D02B0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F555D0424825D28008D02B0 /* LaunchScreen.storyboard */; };
-		6FDF296A2482A933006AD4D9 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDF29692482A933006AD4D9 /* Observer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +27,6 @@
 		6F555D0224825D28008D02B0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F555D0524825D28008D02B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6F555D0724825D28008D02B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FDF29692482A933006AD4D9 /* Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		80959B4BF6E75D5E595D2570 /* Pods-hse_summer_school_test_task.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hse_summer_school_test_task.release.xcconfig"; path = "Target Support Files/Pods-hse_summer_school_test_task/Pods-hse_summer_school_test_task.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,7 +83,6 @@
 				6F555CF924825D26008D02B0 /* AppDelegate.swift */,
 				6F555CFB24825D26008D02B0 /* SceneDelegate.swift */,
 				6F555CFD24825D26008D02B0 /* ContentView.swift */,
-				6FDF29692482A933006AD4D9 /* Observer.swift */,
 				6F555CFF24825D28008D02B0 /* Assets.xcassets */,
 				6F555D0424825D28008D02B0 /* LaunchScreen.storyboard */,
 				6F555D0724825D28008D02B0 /* Info.plist */,
@@ -218,7 +215,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F555CFA24825D26008D02B0 /* AppDelegate.swift in Sources */,
-				6FDF296A2482A933006AD4D9 /* Observer.swift in Sources */,
 				6F555CFC24825D26008D02B0 /* SceneDelegate.swift in Sources */,
 				6F555CFE24825D26008D02B0 /* ContentView.swift in Sources */,
 			);
