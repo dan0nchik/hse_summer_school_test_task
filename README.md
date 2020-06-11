@@ -1,11 +1,8 @@
-# Test task for HSE Summer School 2020
+# Converter
 Written in SwiftUI using [Exchange Rates API](https://exchangeratesapi.io/)
 
-# Screenshots
-
-![Imgur](https://i.imgur.com/Cn2Fiqb.png)
-![Imgur](https://i.imgur.com/VT9T3UL.png)
-![Imgur](https://i.imgur.com/XEwY4PG.png)
+# Video of work
+[![https://imgur.com/XEwY4PG](http://img.youtube.com/vi/hI1Mjf2Q1js/0.jpg)](http://www.youtube.com/watch?v=hI1Mjf2Q1js "Video of work")
 
 
 
