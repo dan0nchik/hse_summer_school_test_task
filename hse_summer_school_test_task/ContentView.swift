@@ -72,6 +72,7 @@ struct ContentView: View {
                     Text("Please choose the second currency!").foregroundColor(.red)
                 }
                 Button(action: {
+                    self.callAPI()
                     UIApplication.shared.endEditing()
                     if self.valueToConvert == ""{
                         self.valueEntered = false
@@ -121,18 +122,12 @@ struct ContentView: View {
         }.onAppear(perform: callAPI)
 }
     func callAPI(){
-        guard let url = URL(string: "https://api.exchangeratesapi.io/latest?base=\(self.currencyConvertFrom)") else {
-            print("Invalid URL")
-            return
-        }
-        let request = URLRequest(url: url)
+        let url = URL(string:"https://api.exchangeratesapi.io/latest?base=\(self.currencyConvertFrom)")
+        let request = URLRequest(url: url!)
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 if let decodedResponse = try? JSONDecoder().decode(Exchange.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.arr = decodedResponse.rates
-                        self.arr = decodedResponse.rates
-                    }
+                    self.arr = decodedResponse.rates
                     return
                 }
             }
@@ -146,7 +141,7 @@ struct chooseView: View {
     @State private var selectedCurrency = 0
     @Binding var showThisView: Bool
     @Binding var mode: String
-    @State private var arr = ["BGN", "MYR", "TRY", "GBP", "ILS", "ISK", "RUB", "AUD", "CZK", "PHP", "NZD", "BRL", "CHF", "RON", "INR", "CNY", "DKK", "SGD", "HKD", "HRK", "CAD", "NOK", "PLN", "HUF", "SEK", "JPY", "KRW", "IDR", "ZAR", "THB", "USD", "MXN", "EUR"]
+    @State private var arr = ["USD","RUB","BGN", "MYR", "TRY", "GBP", "ILS", "ISK", "AUD", "CZK", "PHP", "NZD", "BRL", "CHF", "RON", "INR", "CNY", "DKK", "SGD", "HKD", "HRK", "CAD", "NOK", "PLN", "HUF", "SEK", "JPY", "KRW", "IDR", "ZAR", "THB",  "MXN", "EUR"]
     var body: some View{
         ZStack{
             Color.black.opacity(0.65).edgesIgnoringSafeArea(.all)
