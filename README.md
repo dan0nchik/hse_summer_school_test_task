@@ -3,8 +3,10 @@ Written in SwiftUI using [Exchange Rates API](https://exchangeratesapi.io/)
 
 # Screenshots
 
-![Light theme screenshot](https://i.imgur.com/BTC7rHq.png)
-![Dark theme screenshot](https://i.imgur.com/ByJPxBe.png)
+![Imgur](https://i.imgur.com/Cn2Fiqb.png)
+![Imgur](https://i.imgur.com/VT9T3UL.png)
+![Imgur](https://i.imgur.com/XEwY4PG.png)
+
 
 
 
