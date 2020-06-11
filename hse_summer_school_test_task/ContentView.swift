@@ -73,6 +73,8 @@ struct ContentView: View {
                 }
                 Button(action: {
                     self.callAPI()
+                    Thread.sleep(forTimeInterval: 1)
+                    self.callAPI()
                     UIApplication.shared.endEditing()
                     if self.valueToConvert == ""{
                         self.valueEntered = false
@@ -109,7 +111,7 @@ struct ContentView: View {
                 Text("\(String(format: "%.2f", result))")
                     .font(.title).bold()
                 
-            }.onAppear(perform: callAPI)
+            }
             if showChooseView == true{
                 withAnimation{
                     GeometryReader{
